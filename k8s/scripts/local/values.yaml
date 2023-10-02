@@ -1,0 +1,30 @@
+# Default values for spartacus-ssr-chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+spartacus:
+  #occ: <occ endpoint> e.g. https://api.<customer>-<env>-public.model-t.cc.commerce.ondemand.com
+  nginx:
+    image:
+      repository: spartacus/nginx
+      tag: latest
+      pullPolicy: IfNotPresent
+  node:
+    image:
+      repository: spartacus/node
+      tag: latest
+      pullPolicy: IfNotPresent
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations: 
+    nginx.ingress.kubernetes.io/configuration-snippet: | 
+     more_set_headers "Content-Security-Policy: default-src * 'unsafe-inline'; style-src * 'unsafe-inline'; connect-src * ; img-src * data: *;";
+  hosts:
+    - host: localhost
+      paths:
+        - path: /
+          pathType: Prefix

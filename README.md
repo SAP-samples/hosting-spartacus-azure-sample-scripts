@@ -1,38 +1,45 @@
-# SAP-samples/repository-template
-This default template for SAP Samples repositories includes files for README, LICENSE, and .reuse/dep5. All repositories on github.com/SAP-samples will be created based on this template.
-
-# Containing Files
-
-1. The LICENSE file:
-In most cases, the license for SAP sample projects is `Apache 2.0`.
-
-2. The .reuse/dep5 file: 
-The [Reuse Tool](https://reuse.software/) must be used for your samples project. You can find the .reuse/dep5 in the project initial. Please replace the parts inside the single angle quotation marks < > by the specific information for your repository.
-
-3. The README.md file (this file):
-Please edit this file as it is the primary description file for your project. You can find some placeholder titles for sections below.
-
-# [Title]
-<!-- Please include descriptive title -->
+# Spartacus External Hosting
 
 <!--- Register repository https://api.reuse.software/register, then add REUSE badge:
 [![REUSE status](https://api.reuse.software/badge/github.com/SAP-samples/REPO-NAME)](https://api.reuse.software/info/github.com/SAP-samples/REPO-NAME)
 -->
 
 ## Description
-<!-- Please include SEO-friendly description -->
+This repository provides some sample scripts to support the hosting of a SSR Spartacus project in Azure.
+
+## Disclaimer
+Customer agrees to use Spartacus External Hosting on “as is” basis and SAP makes no guarantees or representations or warranties of any kind, express or implied, arising by law or otherwise, including but not limited to, content, quality, accuracy, completeness, effectiveness, reliability, fitness for a particular purpose, usefulness, use or results to be obtained from Spartacus External Hosting, or that Spartacus External Hosting will be uninterrupted or error-free.
 
 ## Requirements
-
-## Download and Installation
-
-## Known Issues
-<!-- You may simply state "No known issues. -->
-
-## How to obtain support
-[Create an issue](https://github.com/SAP-samples/<repository-name>/issues) in this repository if you find a bug or have questions about the content.
+The main requirements to use this project are:
+- An Azure subscription to use for creating the required resource (e.g. AKS, ACR, etc.).
+- A working Spartacus project with the SSR module enabled.
  
-For additional support, [ask a question in SAP Community](https://answers.sap.com/questions/ask.html).
+## Download and Installation
+This project can be included into the Spartacus project as follow:
+```
+# Spartacus Project Root folder (contains the package.json)
+cd $SPARTACUS_ROOT
+
+# Clone the project inside the project's root
+git clone <this_repository>
+
+# Rename the cloned folder as ´seh´
+mv <hosting-spartacus-azure-sample-scripts> seh
+```
+
+## How does it works
+The project is composed of 3 main component:
+- [docker](./docker/README.md) - build, tag & push the docker images of the Spartacus project.
+- [k8s](./k8s/README.md) - prepare & deploy Spartacus on a K8s infrastructure (like Azure).
+- [jenkins](./jenkins/README.md) - create a jenkins pipeline for the deployment.
+
+**NOTE:** see the `README.md` of each component for more details.
+
+
+## How to obtain support 
+Spartacus External Hosting is provided "as-is" with no official lines of support.
+To get help from the Spartacus External Hosting community, create an issue in this repository.
 
 ## Contributing
 If you wish to contribute code, offer fixes or improvements, please send a pull request. Due to legal reasons, contributors will be asked to accept a DCO when they create the first pull request to this project. This happens in an automated fashion during the submission process. SAP uses [the standard DCO text of the Linux Foundation](https://developercertificate.org/).

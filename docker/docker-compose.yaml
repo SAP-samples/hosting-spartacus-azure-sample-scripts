@@ -1,0 +1,35 @@
+services:
+  spartacus-ssr-node:
+    image: $SPARTACUS_IMAGE_NODE
+    build:
+      context: ../../
+      dockerfile: seh/docker/node/spartacus-node.dockerfile
+      args: 
+        - SPARTACUS_APP_NAME=$SPARTACUS_APP_NAME
+    ports:
+      - "14000:4000"
+    environment:
+      - SPARTACUS_OCC_ENDPOINT= # e.g. https://api.<customer>-<env>-public.model-t.cc.commerce.ondemand.com
+      - SPARTACUS_SSR_SKIP_VALIDATION=false
+      - SPARTACUS_PM2_INSTANCES= # e.g. max
+      - SPARTACUS_PM2_MAX_MEMORY_RESTART= # e.g. 75% of the memory
+      - SPARTACUS_PM2_NODE_ARGS= # e.g. --max-http-header-size=131072 --max_old_space_size=768
+  spartacus-nginx:
+    image: $SPARTACUS_IMAGE_NGINX
+    build:
+      context: ../../
+      dockerfile: seh/docker/nginx/spartacus-nginx.dockerfile
+      args:
+        - SPARTACUS_SSR_IMAGE=$SPARTACUS_IMAGE_NODE
+        - SPARTACUS_APP_NAME=$SPARTACUS_APP_NAME
+    depends_on:
+      - spartacus-ssr-node
+    links:
+      - "spartacus-ssr-node:spartacus-ssr-node"
+    ports:
+      - "18080:8080" #SSR vhost
+      - "18081:8081" #Health check
+    environment:
+      - SPARTACUS_OCC_ENDPOINT= # e.g. https://api.<customer>-<env>-public.model-t.cc.commerce.ondemand.com
+
+   

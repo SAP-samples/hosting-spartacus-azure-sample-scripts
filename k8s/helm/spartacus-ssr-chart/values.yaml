@@ -1,0 +1,108 @@
+# Default values for spartacus-ssr-chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+spartacus:
+  #occ: <occ endpoint> e.g. https://api.<customer>-<env>-public.model-t.cc.commerce.ondemand.com
+  nginx:
+    image:
+      # repository: <spartacus nginx image>
+      # tag: <spartacus nginx image tag>
+      pullPolicy: Always
+    securityContext: {}
+    resources: 
+      requests: 
+        cpu: "100m"
+        memory: "1Gi"
+      limits:
+        cpu: "250m"
+        memory: "1Gi"
+  node:
+    image:
+      # repository: <spartacus node image>
+      # tag: <spartacus node tag>
+      pullPolicy: Always
+    securityContext: {}
+    pm2: {}
+    #   nodeArgs: --max-http-header-size=131072 --max_old_space_size=768
+    #   maxMemory: 614M
+    #   instances: max
+    resources: 
+      requests: 
+        cpu: "100m"
+        memory: "1Gi"
+      limits:
+        cpu: "250m"
+        memory: "1Gi"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+  # Annotations to add to the service account
+  #annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  #name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  # className: "nginx"
+  # annotations: 
+  #   nginx.ingress.kubernetes.io/configuration-snippet: | 
+  #    more_set_headers "Content-Security-Policy: default-src * 'unsafe-inline'; style-src * 'unsafe-inline'; connect-src * ; img-src * data: *;";
+  # hosts:
+  #   - host: ssr.spartacus.k8s
+  #     paths:
+  #       - path: /
+  #         pathType: Prefix
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  # minReplicas: 1
+  # maxReplicas: 100
+  # targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

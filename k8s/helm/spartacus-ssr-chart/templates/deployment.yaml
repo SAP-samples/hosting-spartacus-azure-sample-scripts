@@ -1,0 +1,97 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "spartacus-ssr-chart.fullname" . }}
+  labels:
+    {{- include "spartacus-ssr-chart.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "spartacus-ssr-chart.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "spartacus-ssr-chart.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "spartacus-ssr-chart.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      hostAliases:
+        - ip: 127.0.0.1
+          hostnames:
+          - spartacus-ssr-node
+      containers:
+        - name: "{{ .Chart.Name }}-nginx"
+          securityContext:
+            {{- toYaml .Values.spartacus.nginx.securityContext | nindent 12 }}
+          image: "{{ .Values.spartacus.nginx.image.repository }}:{{ .Values.spartacus.nginx.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.spartacus.nginx.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8081
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8081
+          resources:
+            {{- toYaml .Values.spartacus.nginx.resources | nindent 12 }}
+        - name: "{{ .Chart.Name }}-node"
+          securityContext:
+            {{- toYaml .Values.spartacus.node.securityContext | nindent 12 }}
+          image: "{{ .Values.spartacus.node.image.repository }}:{{ .Values.spartacus.node.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.spartacus.node.image.pullPolicy }}
+          env:
+            {{- with .Values.spartacus.occ }}
+            - name: SPARTACUS_OCC_ENDPOINT
+              value: "{{- . }}"
+            {{- end }}
+            {{- with .Values.spartacus.node.pm2.nodeArgs }}
+            - name: SPARTACUS_PM2_NODE_ARGS
+              value: "{{- . }}"
+            {{- end }}
+            {{- with .Values.spartacus.node.pm2.maxMemory }}
+            - name: SPARTACUS_PM2_MAX_MEMORY_RESTART
+              value: "{{- . }}"
+            {{- end }}
+            {{- with .Values.spartacus.node.pm2.instances }}
+            - name: SPARTACUS_PM2_INSTANCES
+              value: "{{- . }}"
+            {{- end }}
+          livenessProbe:
+            httpGet:
+              path: /index.html
+              port: 4000
+          readinessProbe:
+            httpGet:
+              path: /index.html
+              port: 4000
+          resources:
+            {{- toYaml .Values.spartacus.node.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

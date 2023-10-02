@@ -1,0 +1,11 @@
+services:
+  spartacus-jenkins:
+    image: jenkins/jenkins:lts
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    hostname: jenkins.local
+    volumes:
+      - ./jenkins_home:/var/jenkins_home
+
+        

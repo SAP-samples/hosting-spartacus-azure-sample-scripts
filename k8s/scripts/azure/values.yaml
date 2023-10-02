@@ -1,0 +1,37 @@
+# Default values for spartacus-ssr-chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+spartacus:
+  #occ: <occ endpoint> e.g. https://api.<customer>-<env>-public.model-t.cc.commerce.ondemand.com
+  nginx:
+    image:
+      repository: <spartacus_nginx_image_name>
+      tag: <spartacus_nginx_image_tag>
+      pullPolicy: Always
+  node:
+    image:
+      repository: <spartacus_node_image_name>
+      tag: <spartacus_node_image_tag>
+      pullPolicy: Always
+
+imagePullSecrets: [ name: repo-pull-secret ]
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations: 
+    cert-manager.io/issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+     more_set_headers "Content-Security-Policy: style-src * 'unsafe-inline'; connect-src * data: blob:; img-src * blob: data:;";
+  hosts:
+    - host: <hostname>
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: 
+   - secretName: letsencrypt-secret
+     hosts:
+       - <hostname>
