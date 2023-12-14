@@ -9,6 +9,7 @@ Export the following environment variable:
 export SPARTACUS_APP_NAME=<the name of the spartacus application defined in the package.json>
 export SPARTACUS_IMAGE_NODE=<the target name of the nodejs image>
 export SPARTACUS_IMAGE_NGINX=<the target name of the nginx image>
+export STARTACUS_IMAGE_TAG=<the docker tag of the image>
 ```
 Or use [this](./scripts/env.sh) script to automatically set it up:
 ```
