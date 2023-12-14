@@ -15,10 +15,10 @@ pipeline {
         SPARTACUS_REPO_URL = "https://<acr_name>.azurecr.io"
     
         //Name of the spartacus image for node
-        SPARTACUS_IMAGE_NODE = "${params.IMAGE_NAME}-node:${params.IMAGE_VERSION}"
+        SPARTACUS_IMAGE_NODE = "${params.IMAGE_NAME}/node:${params.IMAGE_VERSION}"
 
         //Name of the spartacus image for nginx
-        SPARTACUS_IMAGE_NGINX = "${params.IMAGE_NAME}-nginx:${params.IMAGE_VERSION}"
+        SPARTACUS_IMAGE_NGINX = "${params.IMAGE_NAME}/nginx:${params.IMAGE_VERSION}"
                     
     }
 
