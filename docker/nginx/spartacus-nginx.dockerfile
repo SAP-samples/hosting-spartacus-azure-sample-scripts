@@ -1,9 +1,9 @@
 # # Stage 1 - Build Spartacus
 ARG SPARTACUS_SSR_IMAGE
-FROM ${SPARTACUS_SSR_IMAGE} as spartacus-ssr
+FROM --platform=linux/amd64 ${SPARTACUS_SSR_IMAGE} as spartacus-ssr
 
 # Stage 2 - Serve Spartacus 
-FROM nginx:stable-alpine-slim
+FROM --platform=linux/amd64 nginx:stable-alpine-slim
 ARG SPARTACUS_APP_NAME
 WORKDIR /opt/jsapp
 COPY --from=spartacus-ssr /opt/jsapp/dist/$SPARTACUS_APP_NAME/browser ./html

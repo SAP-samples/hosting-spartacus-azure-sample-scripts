@@ -1,19 +1,19 @@
 # Stage 1 - Resolve Dependencies
-FROM node:lts-bullseye-slim as spartacus-modules
+FROM --platform=linux/amd64 node:lts-bullseye-slim as spartacus-modules
 WORKDIR /opt/jsapp
 COPY .npmrc .
 COPY package.json .
 RUN yarn install
 
 # Stage 2 - Build SSR
-FROM node:lts-bullseye-slim as spartacus-build-ssr
+FROM --platform=linux/amd64 node:lts-bullseye-slim as spartacus-build-ssr
 WORKDIR /opt/jsapp
 COPY --from=spartacus-modules /opt/jsapp/node_modules ./node_modules
 COPY . .
 RUN yarn build:ssr
 
 # Stage 3 - Serve SSR
-FROM node:lts-bullseye-slim 
+FROM --platform=linux/amd64 node:lts-bullseye-slim 
 WORKDIR /opt/jsapp
 COPY --from=spartacus-build-ssr /opt/jsapp/dist ./dist
 COPY ./seh/docker/node/entrypoint.sh ./entrypoint.sh
